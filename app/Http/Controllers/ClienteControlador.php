@@ -30,10 +30,19 @@ class ClienteControlador extends Controller
     {
         
         $clientes = session('clientes');
+        $titulo = "Todos os Clientes";
+        
+        //Formas de retornar views com parametros
 
-        return view('clientes.index', compact(['clientes'])); //passando as informações para a view.
-
-
+        // return view('clientes.index', ['clientes' => $clientes, 'titulo' => $titulo]);//Semelhante ao compact
+        
+        return view('clientes.index', compact(['clientes', 'titulo'])); //passando as informações para a view.
+        
+        /*
+            return view('clientes.index')
+                    ->with('clientes', $clientes)
+                    ->with('titulo',$titulo);
+        */
     }
 
     /**
@@ -55,7 +64,11 @@ class ClienteControlador extends Controller
     public function store(Request $request)
     {
         $clientes = session('clientes');
-        $id = end($clientes)['id'] + 1;//end: pega o ultimo elemento
+        if(!$clientes){//se não tiver cliente coloca o id em 1
+            $id = 1;
+        }else{   
+            $id = end($clientes)['id'] + 1;//end: pega o ultimo elemento
+        }
         $nome = $request->nome;
         $dados = ["id"=>$id, "nome"=>$nome];
         $clientes[] = $dados;
